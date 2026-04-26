@@ -217,15 +217,15 @@ Falhas na leitura do sensor são tratadas adequadamente, evitando interrupções
   - Diferente de abordagens com sleep(), o código se manteve mais eficiente e preparado para expansão.
 
 - **Classificação correta dos estados**
- - O sistema identificou corretamente os três cenários:
- - Operação normal
- - Situação de alerta (temperatura acima do limite)
- - Falha na leitura do sensor
- - Isso demonstra que a lógica de decisão está bem estruturada.
+  - O sistema identificou corretamente os três cenários:
+  - Operação normal
+  - Situação de alerta (temperatura acima do limite)
+  - Falha na leitura do sensor
+  - Isso demonstra que a lógica de decisão está bem estruturada.
 
 - **Tratamento eficiente de erros**
- - Falhas ocasionais na leitura do sensor não interromperam o funcionamento do sistema.
- - O erro é tratado e sinalizado, permitindo que o sistema continue operando normalmente nos ciclos seguintes.
+  - Falhas ocasionais na leitura do sensor não interromperam o funcionamento do sistema.
+  - O erro é tratado e sinalizado, permitindo que o sistema continue operando normalmente nos ciclos seguintes.
 
 - **Saída de dados clara e organizada**
   - As informações exibidas no terminal são de fácil leitura e interpretação.
