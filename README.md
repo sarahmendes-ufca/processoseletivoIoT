@@ -18,15 +18,6 @@ A interação do usuário ocorre por meio da visualização dos dados no console
 
 <img width="655" height="676" alt="image" src="assets/esp32.png" />
 
----
-
-## 1️⃣ Visão Geral da Solução - Sistema de Monitoramento Ambiental: Monitoramento de Temperatura e Umidade com ESP32
-
-Este projeto tem como objetivo realizar o monitoramento de ambiente, realizando leitura de temperatura e umidade utilizando um sensor DHT22 conectado a um ESP32, em ambiente simulado no Wokwi.
-
-O sistema embarcado coleta os dados do sensor periodicamente e os exibe no terminal serial. Ele simula um sistema básico de monitoramento ambiental, que pode ser expandido para aplicações reais como automação residencial ou controle climático.
-
-A interação do usuário ocorre por meio da visualização dos dados no console da simulação.
 
 ---
 
