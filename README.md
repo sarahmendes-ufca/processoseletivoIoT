@@ -20,9 +20,9 @@ A interação do usuário ocorre por meio da visualização dos dados no console
 
 ---
 
-## 1️⃣ Visão Geral da Solução - Monitoramento de Temperatura e Umidade com ESP32
+## 1️⃣ Visão Geral da Solução - Sistema de Monitoramento Ambiental: Monitoramento de Temperatura e Umidade com ESP32
 
-Este projeto tem como objetivo realizar a leitura de temperatura e umidade utilizando um sensor DHT22 conectado a um ESP32, em ambiente simulado no Wokwi.
+Este projeto tem como objetivo realizar o monitoramento de ambiente, realizando leitura de temperatura e umidade utilizando um sensor DHT22 conectado a um ESP32, em ambiente simulado no Wokwi.
 
 O sistema embarcado coleta os dados do sensor periodicamente e os exibe no terminal serial. Ele simula um sistema básico de monitoramento ambiental, que pode ser expandido para aplicações reais como automação residencial ou controle climático.
 
@@ -36,8 +36,8 @@ O sistema segue uma arquitetura simples baseada em loop contínuo.
 
 ### 🔁 Fluxo principal (`main.py`)
 
-1. Definição do pino de dados
-  - Importa as bibliotecas necessárias:
+1. **Bibliotecas**
+  - O código inicia com a importação das bibliotecas necessárias: Pin, da biblioteca machine, que permite controlar os pinos do ESP32; dht, responsável pela comunicação com o sensor DHT22; e time, utilizada para controle de temporização:
 ``` bash 
 from machine import Pin
 import dht
@@ -46,35 +46,97 @@ import time
 dht_pin = Pin(12)
 ```
 
-2. Inicialização do sensor DHT22
-  - Aqui o sistema prepara o hardware:
+2. **Configurações**
+- Foram definidas algumas configurações importantes do sistema, como o pino onde o sensor está conectado (PINO_DHT = 12), o intervalo entre as leituras (INTERVALO_LEITURA = 2000, em milissegundos) e o limite de temperatura para alerta (TEMP_ALERTA = 30). Essa separação em constantes facilita a manutenção e evita o uso de valores fixos espalhados pelo código:
+``` bash
+PINO_DHT = 12
+INTERVALO_LEITURA = 2000  # ms
+TEMP_ALERTA = 30
+``` 
+
+3. **Estados**
+  - O sensor é inicializado associando o DHT22 ao pino configurado. Na sequência, são definidos os estados do sistema: normal, alerta e erro. Esses estados representam o comportamento do sistema em diferentes condições e caracterizam uma máquina de estados simples, onde o funcionamento não depende apenas da leitura, mas também da situação atual do sistema. Inicialmente, o sistema começa no estado normal.
 ``` bash 
-sensor = dht.DHT22(dht_pin)
+# Estados
+ESTADO_NORMAL = 0
+ESTADO_ALERTA = 1
+ESTADO_ERRO = 2
+
+
+estado_atual = ESTADO_NORMAL
+
+
+# Controle de tempo
+ultimo_tempo = 0
 ```
 
-3. Loop infinito:
-  - O sistema embarcado roda continuamente através de um loop infinito. Dentro do loop, ocorre a coleta dos dados:
+4. **Funções**:
+- A função *ler_sensor()* é responsável por tentar realizar a leitura do DHT22. Caso a leitura seja bem-sucedida, ela retorna a temperatura, a umidade e um valor booleano indicando sucesso. Caso ocorra algum erro, a função retorna valores nulos e um indicador de falha
+```bash
+def ler_sensor():
+ """
+ Realiza a leitura do DHT22.
+ Retorna: (temperatura, umidade, sucesso)
+ """
+ try:
+     sensor.measure()
+     return sensor.temperature(), sensor.humidity(), True
+ except Exception:
+     return None, None, False
+```
+- A função *atualizar_estado()* define em qual estado o sistema deve estar com base nos dados recebidos: se houve erro na leitura, o estado passa a ser de erro; se a temperatura ultrapassa o limite definido, o sistema entra em alerta; caso contrário, permanece no estado normal.
+```bash
+def atualizar_estado(temp, leitura_ok):
+    """
+    Define o estado do sistema com base nos dados.
+    """
+    if not leitura_ok:
+        return ESTADO_ERRO
+    elif temp > TEMP_ALERTA:
+        return ESTADO_ALERTA
+    else:
+        return ESTADO_NORMAL
+```
+
+- A função *exibir_dados()* organiza a saída no terminal, exibindo os valores de temperatura e umidade, além do estado atual do sistema de forma clara.
+```bash
+def exibir_dados(temp, hum, estado):
+    """
+    Exibe os dados no terminal de forma organizada.
+    """
+    print("\n-----------------------")
+
+    if estado == ESTADO_ERRO:
+        print("Erro ao ler sensor")
+
+    else:
+        print("Temperatura:", temp, "°C")
+        print("Umidade:", hum, "%")
+
+        if estado == ESTADO_ALERTA:
+            print("Status: ALERTA (Temperatura alta)")
+        else:
+            print("Status: NORMAL")
+```
+
+5. **Fluxo principal**:
+  - Após a configuração inicial, o programa imprime uma mensagem indicando que o sistema foi iniciado e entra em um loop infinito, que representa o funcionamento contínuo típico de sistemas embarcados. Dentro desse loop, o código obtém o tempo atual em milissegundos utilizando ticks_ms() e verifica se o intervalo definido já foi atingido desde a última leitura. Caso sim, ele atualiza a variável de controle de tempo, realiza a leitura do sensor, determina o estado do sistema e exibe os dados.
 ``` bash 
+# Loop principal
+print("Sistema iniciado")
+
 while True:
-    try:
-        sensor.measure()  # Faz a leitura
+    agora = time.ticks_ms()
 
-        temperatura = sensor.temperature()
-        umidade = sensor.humidity()
+    if time.ticks_diff(agora, ultimo_tempo) >= INTERVALO_LEITURA:
+        ultimo_tempo = agora
 
-        print("Temperatura:", temperatura, "°C")
-        print("Umidade:", umidade, "%")
-        print("-----------------------")
+        temp, hum, ok = ler_sensor()
 
-    except OSError as e:
-        print("Erro ao ler sensor:", e)
+        estado_atual = atualizar_estado(temp if temp is not None else 0, ok)
 
-    time.sleep(2)  # Aguarda 2 segundos
+        exibir_dados(temp, hum, estado_atual)
 ```
-   - Realiza a leitura do sensor
-   - Obtém temperatura e umidade
-   - Exibe os valores no terminal
-   - Aguarda um intervalo antes da próxima leitura
 
 ### 📁 Estrutura de diretórios do projeto
 
