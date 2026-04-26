@@ -189,29 +189,55 @@ Essa separação entre leitura, decisão e saída segue uma arquitetura mais org
 
 ## 4️⃣ Decisões Técnicas Relevantes
 
-* **Uso da biblioteca `dht`**
+- **Uso da biblioteca dht:**
+Permite a comunicação com o sensor de forma simplificada, abstraindo a complexidade do protocolo de comunicação.
 
-  * Facilita a comunicação com o sensor sem precisar implementar o protocolo manualmente
+- **Temporização não bloqueante:**
+A substituição do sleep() por time.ticks_ms() evita o bloqueio do sistema, permitindo maior eficiência e preparando o código para futuras expansões, como multitarefa ou integração com outros módulos.
 
-* **Estrutura simples com loop infinito**
+- **Arquitetura modular:**
+O sistema foi dividido em funções específicas (ler_sensor, atualizar_estado, exibir_dados), promovendo organização, reutilização e facilidade de manutenção.
 
-  * Adequada para sistemas embarcados que executam continuamente
+- **Máquina de estados:**
+A implementação de estados (NORMAL, ALERTA, ERRO) permite um controle mais claro do comportamento do sistema, tornando a lógica mais robusta e escalável.
+
+- **Tratamento de exceções:**
+Falhas na leitura do sensor são tratadas adequadamente, evitando interrupções na execução e aumentando a confiabilidade do sistema
 
 ---
 
 ## 5️⃣ Resultados Obtidos
 
-O sistema conseguiu:
+- **Leitura estável dos dados**
+  - O sistema conseguiu realizar leituras consistentes de temperatura e umidade, respeitando o intervalo necessário do sensor DHT22.
+  - A temporização adequada evitou falhas frequentes de leitura.
 
-- Ler corretamente os valores de temperatura e umidade
-- Exibir os dados no terminal da simulação
-- Manter execução contínua sem travamentos
+- **Execução contínua e sem travamentos**
+  - A utilização de temporização não bloqueante (ticks_ms) garantiu que o sistema permanecesse ativo durante toda a simulação.
+  - Diferente de abordagens com sleep(), o código se manteve mais eficiente e preparado para expansão.
+
+- **Classificação correta dos estados**
+ - O sistema identificou corretamente os três cenários:
+ - Operação normal
+ - Situação de alerta (temperatura acima do limite)
+ - Falha na leitura do sensor
+ - Isso demonstra que a lógica de decisão está bem estruturada.
+
+- **Tratamento eficiente de erros**
+ - Falhas ocasionais na leitura do sensor não interromperam o funcionamento do sistema.
+ - O erro é tratado e sinalizado, permitindo que o sistema continue operando normalmente nos ciclos seguintes.
+
+- **Saída de dados clara e organizada**
+  - As informações exibidas no terminal são de fácil leitura e interpretação.
+  - A inclusão do status do sistema melhora o entendimento do comportamento em tempo real.
+
 
 ### ✅ Requisitos atendidos:
 
-- Comunicação com sensor DHT22
-- Processamento de dados no ESP32
-- Exibição dos resultados
+- O sistema atende aos requisitos propostos
+- Apresenta funcionamento estável e confiável
+- Possui estrutura organizada e próxima de aplicações reais
+- Está preparado para futuras expansões (ex: IoT, display, automação)
 
 Na simulação do Wokwi, os valores são atualizados periodicamente e refletem o comportamento esperado do sensor.
 
