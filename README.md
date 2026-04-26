@@ -197,14 +197,6 @@ Essa separação entre leitura, decisão e saída segue uma arquitetura mais org
 
   * Adequada para sistemas embarcados que executam continuamente
 
-* **Tratamento de exceções (`try/except`)**
-
-  * Evita que o programa trave caso haja falha na leitura do sensor
-
-* **Intervalo de leitura (2 segundos)**
-
-  * Necessário devido à limitação do DHT22, que não suporta leituras muito frequentes
-
 ---
 
 ## 5️⃣ Resultados Obtidos
