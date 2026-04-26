@@ -16,11 +16,9 @@ monitoramento ambiental, que pode ser expandido para aplicações reais como aut
 
 A interação do usuário ocorre por meio da visualização dos dados no console da simulação.
 
-<img width="600" height="600" alt="image" src="https://drive.google.com/file/d/1hD512HDfouLHNTU8VHv9oujFZuuaM0Lz/view?
-usp=sharing" />
+<img width="655" height="676" alt="image" src="assets/esp32.png" />
 
 ---
-
 
 ## 1️⃣ Visão Geral da Solução - Monitoramento de Temperatura e Umidade com ESP32
 
